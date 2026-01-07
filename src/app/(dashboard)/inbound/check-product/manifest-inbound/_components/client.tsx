@@ -165,7 +165,7 @@ export const Client = () => {
               "rounded-xl w-20 px-0 justify-center text-black font-normal capitalize",
               row.original.status_document === "pending" &&
                 "yellow hover:yellow",
-              row.original.status_document === "in progress" &&
+              row.original.status_document === "inprogress" &&
                 "blue hover:blue",
               row.original.status_document === "done" && "green hover:green"
             )}

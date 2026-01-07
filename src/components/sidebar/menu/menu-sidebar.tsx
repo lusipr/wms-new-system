@@ -12,6 +12,7 @@ import {
   LineChart,
   PackageSearch,
   SquareLibrary,
+  User,
 } from "lucide-react";
 
 interface MenuInboundProps {
@@ -340,25 +341,25 @@ const sidebarMenu = [
   //     },
   //   ],
   // },
-  // {
-  //   id: 7,
-  //   title: "Account",
-  //   href: undefined,
-  //   menu: [
-  //     {
-  //       title: "Account Setting",
-  //       href: "/account/setting",
-  //       icon: <User className="w-5 h-5 stroke-[1.5]" />,
-  //       sub_menu: [],
-  //     },
-  //     {
-  //       title: "Panel SPV",
-  //       href: "/account/panel-spv",
-  //       icon: <IdCard className="w-5 h-5 stroke-[1.5]" />,
-  //       sub_menu: [],
-  //     },
-  //   ],
-  // },
+  {
+    id: 7,
+    title: "Account",
+    href: undefined,
+    menu: [
+      {
+        title: "Account Setting",
+        href: "/account/setting",
+        icon: <User className="w-5 h-5 stroke-[1.5]" />,
+        sub_menu: [],
+      },
+      // {
+      //   title: "Panel SPV",
+      //   href: "/account/panel-spv",
+      //   icon: <IdCard className="w-5 h-5 stroke-[1.5]" />,
+      //   sub_menu: [],
+      // },
+    ],
+  },
 ];
 
 const MenuInbound = ({ pathname, setOpen }: MenuInboundProps) => {
