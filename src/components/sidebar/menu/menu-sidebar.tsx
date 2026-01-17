@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { ButtonSidebar } from "../button-sidebar";
 import {
   BarChartBig,
+  Blocks,
   CandlestickChart,
   ClipboardMinus,
   FileCog,
@@ -12,6 +13,7 @@ import {
   LineChart,
   PackageSearch,
   SquareLibrary,
+  Target,
   User,
 } from "lucide-react";
 
@@ -79,13 +81,12 @@ const sidebarMenu = [
         icon: <FileCog className="w-5 h-5 stroke-[1.5]" />,
         sub_menu: [],
       },
-      // {
-      //   title: "Bulking Product",
-      //   href: "/inbound/bulking-product",
-      //   icon: <Target className="w-5 h-5 stroke-[1.5]" />,
-      //   sub_menu: [],
-      // },
-      
+      {
+        title: "Bulking Product",
+        href: "/inbound/bulking-product",
+        icon: <Target className="w-5 h-5 stroke-[1.5]" />,
+        sub_menu: [],
+      },
       {
         title: "Check Product",
         href: undefined,
@@ -137,96 +138,96 @@ const sidebarMenu = [
       },
     ],
   },
-  // {
-  //   id: 4,
-  //   title: "inventory",
-  //   href: undefined,
-  //   menu: [
-  //     {
-  //       title: "Product",
-  //       href: undefined,
-  //       icon: <Boxes className="w-5 h-5 stroke-[1.5]" />,
-  //       sub_menu: [
-  //         // {
-  //         //   title: "by category",
-  //         //   href: "/inventory/product/category",
-  //         // },
-  //         {
-  //           title: "by color",
-  //           href: "/inventory/product/color",
-  //         },
-  //         {
-  //           title: "by category",
-  //           href: "/inventory/product/rack",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       title: "Category Setting",
-  //       href: undefined,
-  //       icon: <Blocks className="w-5 h-5 stroke-[1.5]" />,
-  //       sub_menu: [
-  //         {
-  //           title: "sub category",
-  //           href: "/inventory/category-setting/sub-category",
-  //         },
-  //         {
-  //           title: "tag color",
-  //           href: "/inventory/category-setting/tag-color",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       title: "Moving Product",
-  //       href: undefined,
-  //       icon: <RailSymbol className="w-5 h-5 stroke-[1.5]" />,
-  //       sub_menu: [
-  //         {
-  //           title: "bundle",
-  //           href: "/inventory/moving-product/bundle",
-  //         },
-  //         {
-  //           title: "repair",
-  //           href: "/inventory/moving-product/repair",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       title: "Slow Moving Product",
-  //       href: undefined,
-  //       icon: <Warehouse className="w-5 h-5 stroke-[1.5]" />,
-  //       sub_menu: [
-  //         // {
-  //         //   title: "list product",
-  //         //   href: "/inventory/slow-moving-product/list-product",
-  //         // },
-  //         {
-  //           title: "promo product",
-  //           href: "/inventory/slow-moving-product/promo-product",
-  //         },
-  //         {
-  //           title: "BKL",
-  //           href: "/inventory/slow-moving-product/bkl",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       title: "Stock Opname",
-  //       href: undefined,
-  //       icon: <BookMarked className="w-5 h-5 stroke-[1.5]" />,
-  //       sub_menu: [
-  //         {
-  //           title: "Color",
-  //           href: "/inventory/stock-opname/color",
-  //         },
-  //         {
-  //           title: "Category",
-  //           href: "/inventory/stock-opname/category",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    id: 4,
+    title: "inventory",
+    href: undefined,
+    menu: [
+      // {
+      //   title: "Product",
+      //   href: undefined,
+      //   icon: <Boxes className="w-5 h-5 stroke-[1.5]" />,
+      //   sub_menu: [
+      //     // {
+      //     //   title: "by category",
+      //     //   href: "/inventory/product/category",
+      //     // },
+      //     {
+      //       title: "by color",
+      //       href: "/inventory/product/color",
+      //     },
+      //     {
+      //       title: "by category",
+      //       href: "/inventory/product/rack",
+      //     },
+      //   ],
+      // },
+      {
+        title: "Category Setting",
+        href: undefined,
+        icon: <Blocks className="w-5 h-5 stroke-[1.5]" />,
+        sub_menu: [
+          {
+            title: "sub category",
+            href: "/inventory/category-setting/sub-category",
+          },
+          {
+            title: "tag color",
+            href: "/inventory/category-setting/tag-color",
+          },
+        ],
+      },
+      // {
+      //   title: "Moving Product",
+      //   href: undefined,
+      //   icon: <RailSymbol className="w-5 h-5 stroke-[1.5]" />,
+      //   sub_menu: [
+      //     {
+      //       title: "bundle",
+      //       href: "/inventory/moving-product/bundle",
+      //     },
+      //     {
+      //       title: "repair",
+      //       href: "/inventory/moving-product/repair",
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Slow Moving Product",
+      //   href: undefined,
+      //   icon: <Warehouse className="w-5 h-5 stroke-[1.5]" />,
+      //   sub_menu: [
+      //     // {
+      //     //   title: "list product",
+      //     //   href: "/inventory/slow-moving-product/list-product",
+      //     // },
+      //     {
+      //       title: "promo product",
+      //       href: "/inventory/slow-moving-product/promo-product",
+      //     },
+      //     {
+      //       title: "BKL",
+      //       href: "/inventory/slow-moving-product/bkl",
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Stock Opname",
+      //   href: undefined,
+      //   icon: <BookMarked className="w-5 h-5 stroke-[1.5]" />,
+      //   sub_menu: [
+      //     {
+      //       title: "Color",
+      //       href: "/inventory/stock-opname/color",
+      //     },
+      //     {
+      //       title: "Category",
+      //       href: "/inventory/stock-opname/category",
+      //     },
+      //   ],
+      // },
+    ],
+  },
   // {
   //   id: 5,
   //   title: "Repair Station",
@@ -374,9 +375,7 @@ const MenuInbound = ({ pathname, setOpen }: MenuInboundProps) => {
         >
           {item.title !== undefined && (
             <div className="h-10 flex justify-start items-center w-full px-6 bg-white border-b border-gray-100">
-              <h3 className="text-sm uppercase font-semibold">
-                {item.title}
-              </h3>
+              <h3 className="text-sm uppercase font-semibold">{item.title}</h3>
             </div>
           )}
           <div className="flex flex-col gap-1 w-full px-3">

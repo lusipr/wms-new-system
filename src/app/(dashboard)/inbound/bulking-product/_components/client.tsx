@@ -230,8 +230,8 @@ export const Client = () => {
                         type="button"
                         variant={"ghost"}
                         className={cn(
-                          "text-xl px-0 hover:bg-transparent font-bold underline-offset-2 hover:underline capitalize",
-                          !typeBulk && "underline"
+                          "bg-[#0B91FF] text-l text-white px-2 hover:bg-sky-400 hover:text-white font-bold underline-offset-2 capitalize",
+                          !typeBulk
                         )}
                       >
                         <p>{typeBulk || "Select Type"}</p>
@@ -297,7 +297,7 @@ export const Client = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <button
+                  {/* <button
                     className="flex text-sm items-center text-gray-500 hover:underline"
                     type="button"
                     onClick={() => {
@@ -307,11 +307,11 @@ export const Client = () => {
                   >
                     <RefreshCcw className="w-4 h-4 mr-2" />
                     Change File
-                  </button>
+                  </button> */}
                   {errorMsg?.length === 0 && (
                     <Button
                       onClick={handleComplete}
-                      className="bg-sky-300/80 hover:bg-sky-300 text-black"
+                      className="bg-[#0B91FF] hover:bg-sky-300 text-black"
                       disabled={!typeBulk}
                     >
                       <Save className="w-4 h-4 mr-1" />
@@ -320,7 +320,33 @@ export const Client = () => {
                   )}
                 </div>
               </div>
-              <ul className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2">
+                {/* Header */}
+                <div className="flex items-center justify-between text-sm">
+                  <h2 className="text-xl font-bold mb-2">Selected File</h2>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedFile(null);
+                      setErrorMsg([]);
+                    }}
+                    className="text-sky-500 hover:underline"
+                  >
+                    Change File
+                  </button>
+                </div>
+
+                {/* File Box */}
+                <div className="flex items-center gap-3 border rounded-md px-4 py-3 bg-white">
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-green-500 text-white">
+                    <FileSpreadsheet className="w-4 h-4" />
+                  </div>
+
+                  <p className="text-sm font-medium">{selectedFile.name}</p>
+                </div>
+              </div>
+
+              {/* <ul className="flex flex-col gap-2">
                 <li className="text-sm flex gap-4 px-5 py-3 rounded-md bg-gray-100">
                   <div className="w-10 h-10 rounded-full shadow justify-center flex items-center bg-linear-to-br from-green-400 to-green-600 text-white">
                     <FileSpreadsheet className="w-5 h-5" />
@@ -332,7 +358,7 @@ export const Client = () => {
                     </p>
                   </div>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           )}
         </div>
