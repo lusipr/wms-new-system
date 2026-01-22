@@ -3,10 +3,12 @@
 import {
   AlertCircle,
   ChevronRight,
+  ClipboardPlus,
   Edit3,
   Loader2,
   Minus,
   Monitor,
+  Pencil,
   PlusCircle,
   RefreshCw,
   Smartphone,
@@ -49,22 +51,20 @@ import { Label } from "@/components/ui/label";
 import { useCreateTagColor } from "../_api/use-create-tag-color";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGetListTagColorAPK } from "../_api/use-get-list-tag-color-apk";
 import PickerColor from "@/components/picker-color";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export const Client = () => {
   const queryClient = useQueryClient();
 
-  // type color APK || WMS
-  const [isApk, setIsApk] = useQueryState(
-    "apk",
-    parseAsBoolean.withDefault(false)
-  );
-
   // dialog edit
   const [openCreateEdit, setOpenCreateEdit] = useQueryState(
     "dialog",
-    parseAsBoolean.withDefault(false)
+    parseAsBoolean.withDefault(false),
   );
 
   // color ID Edit
@@ -90,17 +90,11 @@ export const Client = () => {
   });
   const searchValueWMS = useDebounce(dataSearchWMS);
 
-  // search APK
-  const [dataSearchAPK, setDataSearchAPK] = useQueryState("q2", {
-    defaultValue: "",
-  });
-  const searchValueAPK = useDebounce(dataSearchAPK);
-
   // dialog delete
   const [DeleteDialog, confirmDelete] = useConfirm(
-    `Delete Color ${isApk ? "APK" : "WMS"}`,
+    `Delete Color WMS`,
     "This action cannot be undone",
-    "destructive"
+    "destructive",
   );
 
   // mutate DELETE, UPDATE, CREATE
@@ -122,17 +116,6 @@ export const Client = () => {
     isError: isErrorWMS,
   } = useGetListTagColorWMS({ q: searchValueWMS });
 
-  // data APK
-  const {
-    data: dataAPK,
-    refetch: refetchAPK,
-    isLoading: isLoadingAPK,
-    isRefetching: isRefetchingAPK,
-    isPending: isPendingAPK,
-    error: errorAPK,
-    isError: isErrorAPK,
-  } = useGetListTagColorAPK({ q: searchValueAPK });
-
   // data detail
   const {
     data: dataColor,
@@ -140,21 +123,15 @@ export const Client = () => {
     isSuccess: isSuccessColor,
     isError: isErrorColor,
     error: errorColor,
-  } = useGetDetailTagColor({ id: colorId, isAPK: isApk });
+  } = useGetDetailTagColor({ id: colorId });
 
   // data memo WMS
   const dataListWMS: any[] = useMemo(() => {
-    return dataWMS?.data.data.resource;
+    return dataWMS?.data?.resource;
   }, [dataWMS]);
 
-  // data memo APK
-  const dataListAPK: any[] = useMemo(() => {
-    return dataAPK?.data.data.resource;
-  }, [dataAPK]);
-
-  // loading WMS APK
+  // loading WMS 
   const loadingWMS = isLoadingWMS || isRefetchingWMS || isPendingWMS;
-  const loadingAPK = isLoadingAPK || isRefetchingAPK || isPendingAPK;
 
   useEffect(() => {
     alertError({
@@ -165,16 +142,6 @@ export const Client = () => {
       method: "GET",
     });
   }, [isErrorWMS, errorWMS]);
-
-  useEffect(() => {
-    alertError({
-      isError: isErrorAPK,
-      error: errorAPK as AxiosError,
-      data: "Detail APK",
-      action: "get data",
-      method: "GET",
-    });
-  }, [isErrorAPK, errorAPK]);
 
   useEffect(() => {
     alertError({
@@ -193,15 +160,12 @@ export const Client = () => {
     if (!ok) return;
 
     mutateDelete(
-      { id, isAPK: isApk },
+      { id },
       {
         onSuccess: (data) => {
-          toast.success(`Color ${isApk ? "APK" : "WMS"} successfully deleted`);
+          toast.success(`Color WMS successfully deleted`);
           queryClient.invalidateQueries({
-            queryKey: [isApk ? "list-tag-color-apk" : "list-tag-color-wms"],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["tag-color-detail", data.data.data.resource.id, isApk],
+            queryKey: ["list-tag-color-wms"],
           });
         },
         onError: (err) => {
@@ -209,14 +173,12 @@ export const Client = () => {
             toast.error(`Error 403: Restricted Access`);
           } else {
             toast.error(
-              `ERROR ${err?.status}: Color ${
-                isApk ? "APK" : "WMS"
-              } failed to delete`
+              `ERROR ${err?.status}: Color WMS failed to delete`,
             );
-            console.log(`ERROR_COLOR_DELETED_${isApk ? "APK" : "WMS"}:`, err);
+            console.log(`ERROR_COLOR_DELETED_WMS:`, err);
           }
         },
-      }
+      },
     );
   };
 
@@ -238,21 +200,20 @@ export const Client = () => {
     const body = {
       hexa_code_color: newHex,
       name_color: input.name,
-      min_price_color: input.minPrice,
-      max_price_color: input.maxPrice,
-      fixed_price_color: input.fixPrice,
+      min_price_color: Number(input.minPrice || 0),
+      max_price_color: Number(input.maxPrice || 0),
+      fixed_price_color: Number(input.fixPrice || 0),
     };
     mutateCreate(
       {
         body,
-        isAPK: isApk, // is apk color
       },
       {
         onSuccess: () => {
           handleClose();
-          toast.success(`Color ${isApk ? "APK" : "WMS"} successfully created`);
+          toast.success(`Color WMS successfully created`);
           queryClient.invalidateQueries({
-            queryKey: [isApk ? "list-tag-color-apk" : "list-tag-color-wms"],
+            queryKey: ["list-tag-color-wms"],
           });
         },
         onError: (err) => {
@@ -260,14 +221,12 @@ export const Client = () => {
             toast.error(`Error 403: Restricted Access`);
           } else {
             toast.error(
-              `ERROR ${err?.status}: Color ${
-                isApk ? "APK" : "WMS"
-              } failed to create`
+              `ERROR ${err?.status}: Color WMS failed to create`,
             );
-            console.log(`ERROR_COLOR_CREATED_${isApk ? "APK" : "WMS"}:`, err);
+            console.log(`ERROR_COLOR_CREATED_WMS :`, err);
           }
         },
-      }
+      },
     );
   };
 
@@ -285,17 +244,13 @@ export const Client = () => {
       {
         id: colorId, // color ID
         body, // body
-        isAPK: isApk, // isAPK
       },
       {
         onSuccess: (data) => {
           handleClose();
-          toast.success(`Color ${isApk ? "APK" : "WMS"} successfully updated`);
+          toast.success(`Color WMS successfully updated`);
           queryClient.invalidateQueries({
-            queryKey: [isApk ? "list-tag-color-apk" : "list-tag-color-wms"],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["tag-color-detail", data.data.data.resource.id, isApk],
+            queryKey: ["list-tag-color-wms"],
           });
         },
         onError: (err) => {
@@ -303,14 +258,12 @@ export const Client = () => {
             toast.error(`Error 403: Restricted Access`);
           } else {
             toast.error(
-              `ERROR ${err?.status}: Color ${
-                isApk ? "APK" : "WMS"
-              } failed to update`
+              `ERROR ${err?.status}: Color WMS failed to update`,
             );
-            console.log(`ERROR_COLOR_UPDATED_${isApk ? "APK" : "WMS"}:`, err);
+            console.log(`ERROR_COLOR_UPDATED_WMS:`, err);
           }
         },
-      }
+      },
     );
   };
 
@@ -321,13 +274,13 @@ export const Client = () => {
         setInput({
           name: dataColor.data.data.resource.name_color,
           fixPrice: Math.round(
-            dataColor.data.data.resource.fixed_price_color
+            dataColor.data.data.resource.fixed_price_color,
           ).toString(),
           minPrice: Math.round(
-            dataColor.data.data.resource.min_price_color
+            dataColor.data.data.resource.min_price_color,
           ).toString(),
           maxPrice: Math.round(
-            dataColor.data.data.resource.max_price_color
+            dataColor.data.data.resource.max_price_color,
           ).toString(),
         });
         setNewHex(dataColor.data.data.resource.hexa_code_color);
@@ -365,7 +318,7 @@ export const Client = () => {
         <div className="flex justify-center">
           <TooltipProviderPage value={row.original.hexa_code_color}>
             <div
-              className="size-5 rounded-md shadow border border-gray-500"
+              className="size-5 rounded-full shadow border border-gray-500"
               style={{ background: row.original.hexa_code_color }}
             />
           </TooltipProviderPage>
@@ -376,7 +329,7 @@ export const Client = () => {
       accessorKey: "name_color",
       header: "Color Name",
       cell: ({ row }) => (
-        <div className="max-w-[500px] break-all">{row.original.name_color}</div>
+        <div className="max-w-125 break-all">{row.original.name_color}</div>
       ),
     },
     {
@@ -416,16 +369,32 @@ export const Client = () => {
       header: () => <div className="text-center">Action</div>,
       cell: ({ row }) => (
         <div className="flex gap-4 justify-center items-center">
-          <TooltipProviderPage value={<p>Edit</p>}>
+          <TooltipProviderPage
+            side="bottom"
+            align="start"
+            sideOffset={6}
+            value={
+              <div className="flex items-center gap-2">
+                <Pencil className="w-4 h-4" />
+                <span>Edit</span>
+              </div>
+            }
+          >
             <Button
-              className="items-center w-9 px-0 flex-none h-9 border-yellow-400 text-yellow-700 hover:text-yellow-700 hover:bg-yellow-50 disabled:opacity-100 disabled:hover:bg-yellow-50 disabled:pointer-events-auto disabled:cursor-not-allowed"
-              variant={"outline"}
+              variant="outline"
               disabled={isLoadingColor || isPendingUpdate || isPendingCreate}
               onClick={(e) => {
                 e.preventDefault();
                 setColorId(row.original.id);
                 setOpenCreateEdit(true);
               }}
+              className={cn(
+                "w-9 h-9 px-0 flex items-center justify-center",
+                "border-[#B0BAC9] text-[#B0BAC9]",
+                "hover:bg-blue-600 hover:text-white hover:border-blue-600",
+                "rounded-full transition-all duration-200",
+                "disabled:hover:bg-transparent",
+              )}
             >
               {isLoadingColor || isPendingUpdate || isPendingCreate ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -434,9 +403,26 @@ export const Client = () => {
               )}
             </Button>
           </TooltipProviderPage>
-          <TooltipProviderPage value={<p>Delete</p>}>
+
+          <TooltipProviderPage
+            side="bottom"
+            align="start"
+            sideOffset={6}
+            value={
+              <div className="flex items-center gap-2">
+                <Trash2 className="w-4 h-4" />
+                <span>Delete</span>
+              </div>
+            }
+          >
             <Button
-              className="items-center w-9 px-0 flex-none h-9 border-red-400 text-red-700 hover:text-red-700 hover:bg-red-50 disabled:opacity-100 disabled:hover:bg-red-50 disabled:pointer-events-auto disabled:cursor-not-allowed"
+              className={cn(
+                "w-9 h-9 px-0 flex items-center justify-center",
+                "border-[#B0BAC9] text-[#B0BAC9]",
+                "hover:bg-[#FF4F52] hover:text-white hover:border-[#FF4F52]",
+                "rounded-full transition-all duration-200",
+                "disabled:hover:bg-transparent",
+              )}
               variant={"outline"}
               disabled={isPendingDelete}
               onClick={(e) => {
@@ -466,10 +452,7 @@ export const Client = () => {
     return <Loading />;
   }
 
-  if (
-    (isErrorWMS && (errorWMS as AxiosError)?.status === 403) ||
-    (isErrorAPK && (errorAPK as AxiosError)?.status === 403)
-  ) {
+  if (isErrorWMS && (errorWMS as AxiosError)?.status === 403) {
     return (
       <div className="flex flex-col items-start h-full bg-gray-100 w-full relative p-4 gap-4">
         <Forbidden />
@@ -480,170 +463,63 @@ export const Client = () => {
   return (
     <div className="flex flex-col items-start bg-gray-100 w-full relative px-4 gap-4 py-4">
       <DeleteDialog />
-      <Tabs defaultValue={isApk ? "apk" : "wms"} className="w-full">
-        <TabsContent value="wms">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>Setting Tag Color WMS</BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </TabsContent>
-        <TabsContent value="apk">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>Setting Tag Color APK</BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </TabsContent>
-        <div className="flex w-full bg-sky-400 rounded overflow-hidden shadow-md px-5 py-3 justify-between items-center mb-4 mt-4 sticky top-5 z-10 border">
-          <div className="flex items-center">
-            <AlertCircle className="size-4 mr-2" />
-            <p className="text-sm font-medium">Please select the type first</p>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>Setting Tag Color WMS</BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="flex w-full bg-white rounded-md overflow-hidden shadow px-5 py-3 gap-10 flex-col">
+        <h2 className="text-xl font-bold">List Tag Colors WMS</h2>
+        <div className="flex flex-col w-full gap-4">
+          <div className="flex gap-2 items-center w-full justify-between">
+            <div className="flex items-center gap-3 w-full">
+              <Input
+                className="w-2/5 border-sky-400/80 focus-visible:ring-sky-400"
+                value={dataSearchWMS}
+                onChange={(e) => setDataSearchWMS(e.target.value)}
+                placeholder="Search..."
+                autoFocus
+              />
+              <TooltipProviderPage value={"Reload Data"}>
+                <Button
+                  onClick={() => refetchWMS()}
+                  className="items-center w-9 px-0 flex-none h-9 border-sky-400 text-black hover:bg-sky-50"
+                  variant={"outline"}
+                >
+                  <RefreshCw
+                    className={cn("w-4 h-4", loadingWMS ? "animate-spin" : "")}
+                  />
+                </Button>
+              </TooltipProviderPage>
+              <div className="flex gap-4 items-center ml-auto">
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpenCreateEdit(true);
+                  }}
+                  disabled={
+                    isLoadingColor || isPendingUpdate || isPendingCreate
+                  }
+                  className="items-center flex-none h-9 blue border-sky-400/80 text-white hover:text-white disabled:opacity-100 disabled:border-sky-400/80 disabled:pointer-events-auto disabled:cursor-not-allowed"
+                  variant={"outline"}
+                >
+                  {isLoadingColor || isPendingUpdate || isPendingCreate ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                  ) : (
+                    <ClipboardPlus className={"w-4 h-4 mr-1"} />
+                  )}
+                  Tambah
+                </Button>
+              </div>
+            </div>
           </div>
-          <TabsList className="gap-4 bg-transparent">
-            <TabsTrigger value="wms" asChild>
-              <Button
-                onClick={() => {
-                  setDataSearchAPK("");
-                  setDataSearchWMS("");
-                  setIsApk(false);
-                }}
-                className="data-[state=active]:hover:bg-sky-100 data-[state=active]:bg-sky-200 bg-transparent hover:bg-sky-300 text-black shadow-none"
-              >
-                <Monitor className="size-4 mr-2" />
-                WMS
-              </Button>
-            </TabsTrigger>
-            <TabsTrigger value="apk" asChild>
-              <Button
-                onClick={() => {
-                  setDataSearchAPK("");
-                  setDataSearchWMS("");
-                  setIsApk(true);
-                }}
-                className="data-[state=active]:hover:bg-sky-100 data-[state=active]:bg-sky-200 bg-transparent hover:bg-sky-300 text-black shadow-none"
-              >
-                <Smartphone className="size-4 mr-2" />
-                APK
-              </Button>
-            </TabsTrigger>
-          </TabsList>
+          <DataTable columns={columnTagColor} data={dataListWMS ?? []} />
         </div>
-        <TabsContent value="wms">
-          <div className="flex w-full bg-white rounded-md overflow-hidden shadow px-5 py-3 gap-10 flex-col">
-            <h2 className="text-xl font-bold">List Tag Colors WMS</h2>
-            <div className="flex flex-col w-full gap-4">
-              <div className="flex gap-2 items-center w-full justify-between">
-                <div className="flex items-center gap-3 w-full">
-                  <Input
-                    className="w-2/5 border-sky-400/80 focus-visible:ring-sky-400"
-                    value={dataSearchWMS}
-                    onChange={(e) => setDataSearchWMS(e.target.value)}
-                    placeholder="Search..."
-                    autoFocus
-                  />
-                  <TooltipProviderPage value={"Reload Data"}>
-                    <Button
-                      onClick={() => refetchWMS()}
-                      className="items-center w-9 px-0 flex-none h-9 border-sky-400 text-black hover:bg-sky-50"
-                      variant={"outline"}
-                    >
-                      <RefreshCw
-                        className={cn(
-                          "w-4 h-4",
-                          loadingWMS ? "animate-spin" : ""
-                        )}
-                      />
-                    </Button>
-                  </TooltipProviderPage>
-                  <div className="flex gap-4 items-center ml-auto">
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setOpenCreateEdit(true);
-                      }}
-                      disabled={
-                        isLoadingColor || isPendingUpdate || isPendingCreate
-                      }
-                      className="items-center flex-none h-9 bg-sky-400/80 hover:bg-sky-400 text-black disabled:opacity-100 disabled:hover:bg-sky-400 disabled:pointer-events-auto disabled:cursor-not-allowed"
-                      variant={"outline"}
-                    >
-                      {isLoadingColor || isPendingUpdate || isPendingCreate ? (
-                        <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                      ) : (
-                        <PlusCircle className={"w-4 h-4 mr-1"} />
-                      )}
-                      Add Color WMS
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <DataTable columns={columnTagColor} data={dataListWMS ?? []} />
-            </div>
-          </div>
-        </TabsContent>
-        <TabsContent value="apk">
-          <div className="flex w-full bg-white rounded-md overflow-hidden shadow px-5 py-3 gap-10 flex-col">
-            <h2 className="text-xl font-bold">List Tag Colors APK</h2>
-            <div className="flex flex-col w-full gap-4">
-              <div className="flex gap-2 items-center w-full justify-between">
-                <div className="flex items-center gap-3 w-full">
-                  <Input
-                    className="w-2/5 border-sky-400/80 focus-visible:ring-sky-400"
-                    value={dataSearchAPK}
-                    onChange={(e) => setDataSearchAPK(e.target.value)}
-                    placeholder="Search..."
-                    autoFocus
-                  />
-                  <TooltipProviderPage value={"Reload Data"}>
-                    <Button
-                      onClick={() => refetchAPK()}
-                      className="items-center w-9 px-0 flex-none h-9 border-sky-400 text-black hover:bg-sky-50"
-                      variant={"outline"}
-                    >
-                      <RefreshCw
-                        className={cn(
-                          "w-4 h-4",
-                          loadingAPK ? "animate-spin" : ""
-                        )}
-                      />
-                    </Button>
-                  </TooltipProviderPage>
-                  <div className="flex gap-4 items-center ml-auto">
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setOpenCreateEdit(true);
-                      }}
-                      disabled={
-                        isLoadingColor || isPendingUpdate || isPendingCreate
-                      }
-                      className="items-center flex-none h-9 bg-sky-400/80 hover:bg-sky-400 text-black disabled:opacity-100 disabled:hover:bg-sky-400 disabled:pointer-events-auto disabled:cursor-not-allowed"
-                      variant={"outline"}
-                    >
-                      {isLoadingColor || isPendingUpdate || isPendingCreate ? (
-                        <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                      ) : (
-                        <PlusCircle className={"w-4 h-4 mr-1"} />
-                      )}
-                      Add Color APK
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <DataTable columns={columnTagColor} data={dataListAPK ?? []} />
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+      </div>
       <Dialog
         open={openCreateEdit}
         onOpenChange={() => {
@@ -798,7 +674,7 @@ export const Client = () => {
                   "text-black w-full",
                   colorId
                     ? "bg-yellow-400 hover:bg-yellow-400/80"
-                    : "bg-sky-400 hover:bg-sky-400/80"
+                    : "bg-sky-400 hover:bg-sky-400/80",
                 )}
                 type="submit"
                 disabled={!input.name || !newHex}

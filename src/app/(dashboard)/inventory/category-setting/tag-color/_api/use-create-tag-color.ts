@@ -6,7 +6,6 @@ import { getCookie } from "cookies-next/client";
 
 type RequestType = {
   body: any;
-  isAPK: boolean;
 };
 
 type Error = AxiosError;
@@ -15,16 +14,12 @@ export const useCreateTagColor = () => {
   const accessToken = getCookie("accessToken");
 
   const mutation = useMutation<AxiosResponse, Error, RequestType>({
-    mutationFn: async ({ body, isAPK }) => {
-      const res = await axios.post(
-        `${baseUrl}/${isAPK ? "color_tags2" : "color_tags"}`,
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+    mutationFn: async ({ body }) => {
+      const res = await axios.post(`${baseUrl}/color_tags`, body, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       return res;
     },
   });

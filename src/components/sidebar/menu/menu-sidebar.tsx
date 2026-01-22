@@ -9,9 +9,9 @@ import {
   ClipboardMinus,
   FileCog,
   FolderClock,
-  LibraryBigIcon,
   LineChart,
   PackageSearch,
+  RailSymbol,
   SquareLibrary,
   Target,
   User,
@@ -35,39 +35,39 @@ const sidebarMenu = [
         query: "storage-report",
         sub_menu: [],
       },
-      {
-        title: "General Sale",
-        href: "/dashboard/general-sale",
-        icon: <BarChartBig className="w-5 h-5 stroke-[1.5]" />,
-        query: "general-sale",
-        sub_menu: [],
-      },
-      {
-        title: "Analytic Sale",
-        href: "/dashboard/analytic-sale",
-        icon: <CandlestickChart className="w-5 h-5 stroke-[1.5]" />,
-        query: "analytic-sale",
-        sub_menu: [],
-      },
-      {
-        title: "Summary Report",
-        href: undefined,
-        icon: <ClipboardMinus className="w-5 h-5 stroke-[1.5]" />,
-        sub_menu: [
-          {
-            title: "Product combined",
-            href: "/dashboard/summary-report/product-combined",
-          },
-          // {
-          //   title: "Product Inbound",
-          //   href: "/dashboard/summary-report/product-inbound",
-          // },
-          // {
-          //   title: "Product Outbound",
-          //   href: "/dashboard/summary-report/product-outbound",
-          // },
-        ],
-      },
+      // {
+      //   title: "General Sale",
+      //   href: "/dashboard/general-sale",
+      //   icon: <BarChartBig className="w-5 h-5 stroke-[1.5]" />,
+      //   query: "general-sale",
+      //   sub_menu: [],
+      // },
+      // {
+      //   title: "Analytic Sale",
+      //   href: "/dashboard/analytic-sale",
+      //   icon: <CandlestickChart className="w-5 h-5 stroke-[1.5]" />,
+      //   query: "analytic-sale",
+      //   sub_menu: [],
+      // },
+      // {
+      //   title: "Summary Report",
+      //   href: undefined,
+      //   icon: <ClipboardMinus className="w-5 h-5 stroke-[1.5]" />,
+      //   sub_menu: [
+      //     {
+      //       title: "Product combined",
+      //       href: "/dashboard/summary-report/product-combined",
+      //     },
+      //     // {
+      //     //   title: "Product Inbound",
+      //     //   href: "/dashboard/summary-report/product-inbound",
+      //     // },
+      //     // {
+      //     //   title: "Product Outbound",
+      //     //   href: "/dashboard/summary-report/product-outbound",
+      //     // },
+      //   ],
+      // },
     ],
   },
   {
@@ -130,12 +130,12 @@ const sidebarMenu = [
         icon: <SquareLibrary className="w-5 h-5 stroke-[1.5]" />,
         sub_menu: [],
       },
-      {
-        title: "Stagging",
-        href: "/stagging/rack",
-        icon: <LibraryBigIcon className="w-5 h-5 stroke-[1.5]" />,
-        sub_menu: [],
-      },
+      // {
+      //   title: "Stagging",
+      //   href: "/stagging/rack",
+      //   icon: <LibraryBigIcon className="w-5 h-5 stroke-[1.5]" />,
+      //   sub_menu: [],
+      // },
     ],
   },
   {
@@ -177,21 +177,21 @@ const sidebarMenu = [
           },
         ],
       },
-      // {
-      //   title: "Moving Product",
-      //   href: undefined,
-      //   icon: <RailSymbol className="w-5 h-5 stroke-[1.5]" />,
-      //   sub_menu: [
-      //     {
-      //       title: "bundle",
-      //       href: "/inventory/moving-product/bundle",
-      //     },
-      //     {
-      //       title: "repair",
-      //       href: "/inventory/moving-product/repair",
-      //     },
-      //   ],
-      // },
+      {
+        title: "Moving Product",
+        href: undefined,
+        icon: <RailSymbol className="w-5 h-5 stroke-[1.5]" />,
+        sub_menu: [
+          {
+            title: "bundle",
+            href: "/inventory/moving-product/bundle",
+          },
+          // {
+          //   title: "repair",
+          //   href: "/inventory/moving-product/repair",
+          // },
+        ],
+      },
       // {
       //   title: "Slow Moving Product",
       //   href: undefined,

@@ -4,6 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";
 
 export const TooltipProviderPage = ({
@@ -26,10 +27,18 @@ export const TooltipProviderPage = ({
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent
-          align={align}
           side={side}
-          className={className}
+          align={align}
           sideOffset={sideOffset}
+          className={cn(
+            "bg-white",
+            "border border-[#9291A5]",
+            "text-[#9291A5]",
+            "shadow-md",
+            "rounded-lg",
+            "px-3 py-2",
+            "-translate-x-14 -translate-y-2"
+          )}
         >
           {value}
         </TooltipContent>

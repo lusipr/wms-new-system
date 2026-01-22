@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ClipboardPlus,
   Edit3,
   FileDown,
   Loader2,
@@ -49,15 +50,15 @@ export const Client = () => {
 
   const [openCreateEdit, setOpenCreateEdit] = useQueryState(
     "dialog",
-    parseAsBoolean.withDefault(false)
+    parseAsBoolean.withDefault(false),
   );
   const [categoryId, setCategoryId] = useQueryState("categoryId", {
     defaultValue: "",
   });
   const [input, setInput] = useState({
     name: "",
-    discount: "0",
-    maxPrice: "0",
+    discount: 0,
+    maxPrice: 0,
   });
 
   const [dataSearch, setDataSearch] = useQueryState("q", { defaultValue: "" });
@@ -66,7 +67,7 @@ export const Client = () => {
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete Category",
     "This action cannot be undone",
-    "liquid"
+    "liquid",
   );
 
   const { mutate: mutateDelete, isPending: isPendingDelete } =
@@ -139,8 +140,8 @@ export const Client = () => {
     setCategoryId("");
     setInput({
       name: "",
-      discount: "0",
-      maxPrice: "0",
+      discount: 0,
+      maxPrice: 0,
     });
   };
 
@@ -160,7 +161,7 @@ export const Client = () => {
             queryKey: ["list-categories"],
           });
         },
-      }
+      },
     );
   };
 
@@ -183,7 +184,7 @@ export const Client = () => {
             queryKey: ["list-categories"],
           });
         },
-      }
+      },
     );
   };
 
@@ -192,23 +193,19 @@ export const Client = () => {
       return setInput({
         name: dataCategory.data.data.resource.name_category ?? "",
         discount:
-          Math.round(
-            dataCategory.data.data.resource.discount_category
-          ).toString() ?? "0",
+          Math.round(dataCategory.data.data.resource.discount_category) ?? 0,
         maxPrice:
-          Math.round(
-            dataCategory.data.data.resource.max_price_category
-          ).toString() ?? "0",
+          Math.round(dataCategory.data.data.resource.max_price_category) ?? 0,
       });
     }
   }, [dataCategory]);
 
   useEffect(() => {
-    if (isNaN(parseFloat(input.discount))) {
-      setInput((prev) => ({ ...prev, discount: "0" }));
+    if (isNaN(input.discount)) {
+      setInput((prev) => ({ ...prev, discount: 0 }));
     }
-    if (isNaN(parseFloat(input.maxPrice))) {
-      setInput((prev) => ({ ...prev, maxPrice: "0" }));
+    if (isNaN(input.maxPrice)) {
+      setInput((prev) => ({ ...prev, maxPrice: 0 }));
     }
   }, [input]);
 
@@ -226,9 +223,7 @@ export const Client = () => {
       accessorKey: "new_name_product",
       header: "Category Name",
       cell: ({ row }) => (
-        <div className="max-w-100 break-all">
-          {row.original.name_category}
-        </div>
+        <div className="max-w-100 break-all">{row.original.name_category}</div>
       ),
     },
     {
@@ -321,6 +316,8 @@ export const Client = () => {
             <BreadcrumbLink href="/">Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
+          <BreadcrumbItem>Inventory</BreadcrumbItem>
+          <BreadcrumbSeparator />
           <BreadcrumbItem>Setting Sub Category</BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -373,15 +370,15 @@ export const Client = () => {
                   disabled={
                     isLoadingCategory || isPendingUpdate || isPendingCreate
                   }
-                  className="items-center flex-none h-9 bg-sky-400/80 hover:bg-sky-400 text-black disabled:opacity-100 disabled:hover:bg-sky-400 disabled:pointer-events-auto disabled:cursor-not-allowed"
+                  className="items-center flex-none h-9 blue border-sky-400/80 text-white hover:text-white disabled:opacity-100 disabled:border-sky-400/80 disabled:pointer-events-auto disabled:cursor-not-allowed"
                   variant={"outline"}
                 >
                   {isLoadingCategory || isPendingUpdate || isPendingCreate ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : (
-                    <PlusCircle className={"w-4 h-4 mr-1"} />
+                    <ClipboardPlus className={"w-4 h-4 mr-1"} />
                   )}
-                  Add Category
+                  Tambah
                 </Button>
               </div>
             </div>
@@ -389,101 +386,84 @@ export const Client = () => {
           <DataTable columns={columnApprovementStaging} data={dataList ?? []} />
         </div>
       </div>
-      <Dialog
-        open={openCreateEdit}
-        onOpenChange={() => {
-          handleClose();
-        }}
-      >
-        <DialogContent>
+      <Dialog open={openCreateEdit} onOpenChange={handleClose}>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-lg font-semibold">
               {categoryId ? "Edit Category" : "Create Category"}
             </DialogTitle>
           </DialogHeader>
+
           <form
             onSubmit={!categoryId ? handleCreate : handleUpdate}
-            className="w-full flex flex-col gap-4"
+            className="flex flex-col gap-4"
           >
-            <div className="border p-4 rounded border-sky-500 gap-4 flex flex-col">
-              <div className="flex flex-col gap-1 w-full">
-                <Label>Category Name</Label>
-                <Input
-                  className="border-sky-400/80 focus-visible:ring-0 border-0 border-b rounded-none focus-visible:border-sky-500 disabled:cursor-not-allowed disabled:opacity-100"
-                  placeholder="Category name..."
-                  value={input.name}
-                  // disabled={loadingSubmit}
-                  onChange={(e) =>
-                    setInput((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full relative">
+            <div className="flex flex-col gap-1">
+              <Label>Name Category</Label>
+              <Input
+                placeholder="Name Category"
+                value={input.name}
+                // disabled={loadingSubmit}
+                onChange={(e) =>
+                  setInput((prev) => ({
+                    ...prev,
+                    name: e.target.value,
+                  }))
+                }
+              />
+            </div>
+
+            {/* Discount & Max Price */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1 relative">
                 <Label>Discount</Label>
                 <Input
-                  className="border-sky-400/80 focus-visible:ring-0 border-0 border-b rounded-none focus-visible:border-sky-500 disabled:cursor-not-allowed disabled:opacity-100"
                   placeholder="0"
+                  type="number"
                   value={input.discount}
-                  // disabled={loadingSubmit}
                   onChange={(e) =>
                     setInput((prev) => ({
                       ...prev,
-                      discount: e.target.value.startsWith("0")
-                        ? e.target.value.replace(/^0+/, "")
-                        : e.target.value,
+                      discount: Number(e.target.value) || 0,
                     }))
                   }
                 />
-                <Percent className="size-4 absolute right-3 bottom-2" />
+
+                <Percent className="size-4 absolute right-3 top-9 text-muted-foreground" />
               </div>
-              <div className="flex flex-col gap-1 w-full relative">
+
+              <div className="flex flex-col gap-1">
                 <Label>Max Price</Label>
                 <Input
-                  className="border-sky-400/80 focus-visible:ring-0 border-0 border-b rounded-none focus-visible:border-sky-500 disabled:cursor-not-allowed disabled:opacity-100"
                   placeholder="Rp 0"
                   value={input.maxPrice}
                   type="number"
-                  // disabled={loadingSubmit}
                   onChange={(e) =>
                     setInput((prev) => ({
                       ...prev,
-                      maxPrice: e.target.value.startsWith("0")
-                        ? e.target.value.replace(/^0+/, "")
-                        : e.target.value,
+                      maxPrice: Number(e.target.value) || 0,
                     }))
                   }
                 />
-                <p className="absolute right-3 bottom-2 text-xs text-gray-400">
-                  {formatRupiah(parseFloat(input.maxPrice)) ?? "Rp 0"}
-                </p>
               </div>
             </div>
-            <div className="flex w-full gap-2">
+
+            {/* Actions */}
+            <div className="flex gap-3 pt-2">
               <Button
-                className="w-full bg-transparent hover:bg-transparent text-black border-black/50 border hover:border-black"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleClose();
-                }}
                 type="button"
+                variant="secondary"
+                className="w-full bg-gray-300 text-gray-700 hover:bg-gray-400"
+                onClick={handleClose}
               >
                 Cancel
               </Button>
+
               <Button
-                className={cn(
-                  "text-black w-full",
-                  categoryId
-                    ? "bg-yellow-400 hover:bg-yellow-400/80"
-                    : "bg-sky-400 hover:bg-sky-400/80"
-                )}
                 type="submit"
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white"
                 disabled={
-                  !input.name ||
-                  parseFloat(input.maxPrice) <= 0 ||
-                  parseFloat(input.discount) < 0
+                  !input.name || input.maxPrice <= 0 || input.discount < 0
                 }
               >
                 {categoryId ? "Update" : "Create"}

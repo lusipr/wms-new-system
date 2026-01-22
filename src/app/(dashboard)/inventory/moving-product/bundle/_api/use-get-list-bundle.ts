@@ -3,12 +3,12 @@ import axios from "axios";
 import { baseUrl } from "@/lib/baseUrl";
 import { getCookie } from "cookies-next/client";
 
-export const useGetListTagColorAPK = ({ q }: any) => {
+export const useGetListBundle = ({ p, q }: any) => {
   const accessToken = getCookie("accessToken");
   const query = useQuery({
-    queryKey: ["list-tag-color-apk", { q }],
+    queryKey: ["list-bundle", { p, q }],
     queryFn: async () => {
-      const res = await axios.get(`${baseUrl}/color_tags2?q=${q}`, {
+      const res = await axios.get(`${baseUrl}/bundle?page=${p}&q=${q}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

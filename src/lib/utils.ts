@@ -35,16 +35,16 @@ export const setPaginate = ({
   setMetaPage: any;
 }) => {
   if (isSuccess && data) {
-    if (dataPaginate.last_page < dataPaginate.current_page) {
+    if (dataPaginate?.last_page < dataPaginate?.current_page) {
       setPage(1);
     } else {
-      setPage(dataPaginate.current_page ?? 1);
+      setPage(dataPaginate?.current_page ?? 1);
     }
     setMetaPage({
-      last: dataPaginate.last_page ?? 1,
-      from: dataPaginate.from ?? 0,
-      total: dataPaginate.total ?? 0,
-      perPage: dataPaginate.per_page ?? 0,
+      last: dataPaginate?.last_page ?? 1,
+      from: dataPaginate?.from ?? 0,
+      total: dataPaginate?.total ?? 0,
+      perPage: dataPaginate?.per_page ?? 0,
     });
   }
 };

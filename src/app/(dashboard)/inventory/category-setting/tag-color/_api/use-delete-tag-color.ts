@@ -6,7 +6,6 @@ import { getCookie } from "cookies-next/client";
 
 type RequestType = {
   id: string;
-  isAPK: boolean;
 };
 
 type Error = AxiosError;
@@ -15,9 +14,9 @@ export const useDeleteTagColor = () => {
   const accessToken = getCookie("accessToken");
 
   const mutation = useMutation<AxiosResponse, Error, RequestType>({
-    mutationFn: async ({ id, isAPK }) => {
+    mutationFn: async ({ id }) => {
       const res = await axios.delete(
-        `${baseUrl}/${isAPK ? "color_tags2" : "color_tags"}/${id}`,
+        `${baseUrl}/color_tags/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

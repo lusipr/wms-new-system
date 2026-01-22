@@ -32,25 +32,27 @@ import { DataPaginationProps, MetaPageProps } from "./type";
 export const usePagination = (indicator: string = "p") => {
   const [page, setPage] = useQueryState(
     indicator,
-    parseAsInteger.withDefault(1)
+    parseAsInteger.withDefault(1),
   );
   const [metaPage, setMetaPage] = useState<MetaPageProps>({
     last: 1,
     from: 1,
+    to: 1,
     total: 1,
     perPage: 1,
   });
 
   const setPagination = (dataPaginate: DataPaginationProps) => {
-    const currentPage = dataPaginate.current_page ?? 1;
-    const lastPage = dataPaginate.last_page ?? 1;
+    const currentPage = dataPaginate?.current_page ?? 1;
+    const lastPage = dataPaginate?.last_page ?? 1;
 
     setPage(currentPage > lastPage ? 1 : currentPage);
     setMetaPage({
       last: lastPage,
-      from: dataPaginate.from ?? 0,
-      total: dataPaginate.total ?? 0,
-      perPage: dataPaginate.per_page ?? 0,
+      from: dataPaginate?.from ?? 0,
+      to: dataPaginate?.to ?? 0,
+      total: dataPaginate?.total ?? 0,
+      perPage: dataPaginate?.per_page ?? 0,
     });
   };
 

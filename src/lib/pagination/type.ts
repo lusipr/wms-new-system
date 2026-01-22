@@ -2,6 +2,7 @@ export interface DataPaginationProps {
   last_page?: number;
   current_page?: number;
   from?: number;
+  to?: number;
   total?: number;
   per_page?: number;
 }
@@ -9,6 +10,7 @@ export interface DataPaginationProps {
 export interface MetaPageProps {
   last: number;
   from: number;
+  to: number;
   total: number;
   perPage: number;
 }

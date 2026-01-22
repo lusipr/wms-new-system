@@ -154,23 +154,23 @@ export const Client = () => {
   const loading = isPending || isRefetching || isLoading;
 
   const dataStorage = useMemo(() => {
-    return data?.data.data.resource;
+    return data?.data?.resource;
   }, [data]);
 
   const dataChart: ChartData[] = useMemo(() => {
-    return data?.data.data.resource.chart.category;
+    return data?.data?.resource?.chart?.category;
   }, [data]);
 
   const dataChartStaging: ChartData[] = useMemo(() => {
-    return data?.data.data.resource.chart_staging.category;
+    return data?.data?.resource?.chart_staging?.category;
   }, [data]);
 
   const dataChartDump: ChartData[] = useMemo(() => {
-    return data?.data.data.resource.chart_dump.category;
+    return data?.data?.resource?.chart_dump?.category;
   }, [data]);
 
   const dataChartScrapQcd: ChartData[] = useMemo(() => {
-    return data?.data.data.resource.chart_scrap_qcd.category;
+    return data?.data?.resource?.chart_scrap_qcd?.category;
   }, [data]);
 
   const clearSearch = (e: MouseEvent<HTMLButtonElement>) => {

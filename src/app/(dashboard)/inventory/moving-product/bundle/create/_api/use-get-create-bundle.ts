@@ -3,17 +3,13 @@ import axios from "axios";
 import { baseUrl } from "@/lib/baseUrl";
 import { getCookie } from "cookies-next/client";
 
-export const useGetDetailTagColor = ({
-  id,
-}: {
-  id: any;
-}) => {
+export const useGetCreateBundle = ({ p }: any) => {
   const accessToken = getCookie("accessToken");
   const query = useQuery({
-    queryKey: ["tag-color-detail", id],
+    queryKey: ["data-create-bundle", { p }],
     queryFn: async () => {
       const res = await axios.get(
-        `${baseUrl}/color_tags/${id}`,
+        `${baseUrl}/bundle/filter-product?page=${p}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -22,7 +18,6 @@ export const useGetDetailTagColor = ({
       );
       return res;
     },
-    enabled: !!id,
   });
   return query;
 };

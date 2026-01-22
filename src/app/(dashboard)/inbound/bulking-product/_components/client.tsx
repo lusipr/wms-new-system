@@ -44,16 +44,16 @@ export const Client = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [typeBulk, setTypeBulk] = useQueryState(
     "type",
-    parseAsStringLiteral(["category", "color", ""] as const).withDefault("")
+    parseAsStringLiteral(["category", "color", ""] as const).withDefault(""),
   );
   const [isDialogOpen, setIsDialogOpen] = useQueryState(
     "typeOpen",
-    parseAsBoolean.withDefault(false)
+    parseAsBoolean.withDefault(false),
   );
   const [errorMsg, setErrorMsg] = useState([]);
   const [isErrorOpen, setIsErrorOpen] = useQueryState(
     "isError",
-    parseAsBoolean.withDefault(false)
+    parseAsBoolean.withDefault(false),
   );
   const { mutate } = useUploadBulking();
   const { mutate: mutateExport, isPending: isPendingExport } =
@@ -61,7 +61,7 @@ export const Client = () => {
 
   // state data
   const [selectedFile, setSelectedFile] = useState<UploadedFileProps | null>(
-    null
+    null,
   );
 
   const handleComplete = async () => {
@@ -85,7 +85,7 @@ export const Client = () => {
             setIsErrorOpen(true);
             setTypeBulk("");
           },
-        }
+        },
       );
     });
 
@@ -183,8 +183,7 @@ export const Client = () => {
                   <div className="flex gap-3 items-center">
                     <h2 className="text-xl font-bold">Bulking Product</h2>
                   </div>
-
-                  <Button
+                  {/* <Button
                     type="button"
                     variant={"liquid"}
                     className="font-semibold flex items-center gap-2"
@@ -197,7 +196,7 @@ export const Client = () => {
                       <FileDown className="w-4 h-4" />
                     )}
                     Export Template
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               <div
@@ -231,7 +230,7 @@ export const Client = () => {
                         variant={"ghost"}
                         className={cn(
                           "bg-[#0B91FF] text-l text-white px-2 hover:bg-sky-400 hover:text-white font-bold underline-offset-2 capitalize",
-                          !typeBulk
+                          !typeBulk,
                         )}
                       >
                         <p>{typeBulk || "Select Type"}</p>
@@ -260,7 +259,7 @@ export const Client = () => {
                               "w-4 h-4 mr-2",
                               typeBulk === "category"
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           Category
@@ -277,7 +276,9 @@ export const Client = () => {
                           <CheckCircle2
                             className={cn(
                               "w-4 h-4 mr-2",
-                              typeBulk === "color" ? "opacity-100" : "opacity-0"
+                              typeBulk === "color"
+                                ? "opacity-100"
+                                : "opacity-0",
                             )}
                           />
                           Color

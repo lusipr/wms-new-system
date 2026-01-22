@@ -3,17 +3,13 @@ import axios from "axios";
 import { baseUrl } from "@/lib/baseUrl";
 import { getCookie } from "cookies-next/client";
 
-export const useGetDetailTagColor = ({
-  id,
-}: {
-  id: any;
-}) => {
+export const useGetListApproveStaging = ({ p, q }: any) => {
   const accessToken = getCookie("accessToken");
   const query = useQuery({
-    queryKey: ["tag-color-detail", id],
+    queryKey: ["list-staging-approvement", { p, q }],
     queryFn: async () => {
       const res = await axios.get(
-        `${baseUrl}/color_tags/${id}`,
+        `${baseUrl}/stagging-approves?page=${p}&q=${q}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -22,7 +18,6 @@ export const useGetDetailTagColor = ({
       );
       return res;
     },
-    enabled: !!id,
   });
   return query;
 };

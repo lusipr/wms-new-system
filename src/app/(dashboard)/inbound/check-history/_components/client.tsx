@@ -43,6 +43,7 @@ export const Client = () => {
   const [metaPage, setMetaPage] = useState({
     last: 1, //page terakhir
     from: 1, //data dimulai dari (untuk memulai penomoran tabel)
+    to: 1, //data sampai
     total: 1, //total data
     perPage: 1,
   });

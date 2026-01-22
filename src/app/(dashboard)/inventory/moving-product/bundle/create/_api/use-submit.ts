@@ -6,37 +6,32 @@ import { toast } from "sonner";
 import { getCookie } from "cookies-next/client";
 
 type RequestType = {
-  id: string;
   body: any;
 };
-
 type Error = AxiosError;
 
-export const useUpdateTagColor = () => {
+export const useSubmit = () => {
   const accessToken = getCookie("accessToken");
 
   const mutation = useMutation<AxiosResponse, Error, RequestType>({
-    mutationFn: async ({ id, body }) => {
-      const res = await axios.put(
-        `${baseUrl}/color_tags"/${id}`,
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+    mutationFn: async ({ body }) => {
+      const res = await axios.post(`${baseUrl}/bundle`, body, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       return res;
     },
     onSuccess: () => {
-      toast.success(`Color successfully updated`);
+      toast.success("Bundle successfully created");
+      window.location.href = "/inventory/moving-product/bundle";
     },
     onError: (err) => {
       if (err.status === 403) {
         toast.error(`Error 403: Restricted Access`);
       } else {
-        toast.error(`ERROR ${err?.status}: Color failed to update`);
-        console.log("ERROR_UPDATE_COLOR:", err);
+        toast.error(`ERROR ${err?.status}: Bundle failed to create`);
+        console.log("ERROR_CREATE_BUNDLE:", err);
       }
     },
   });

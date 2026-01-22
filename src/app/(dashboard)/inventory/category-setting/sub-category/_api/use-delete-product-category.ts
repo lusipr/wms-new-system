@@ -35,7 +35,6 @@ export const useDeleteProductCategory = () => {
       if (err.status === 403) {
         toast.error(`Error 403: Restricted Access`);
       } else {
-        toast.error(`ERROR ${err?.status}: Category failed to delete`);
         console.log("ERROR_DELETE_CATEGORY:", err);
       }
     },
