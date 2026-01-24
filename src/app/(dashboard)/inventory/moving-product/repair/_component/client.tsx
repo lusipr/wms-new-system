@@ -26,12 +26,12 @@ import { AxiosError } from "axios";
 import Loading from "@/app/(dashboard)/loading";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
-import { useGetListBundle } from "../_api/use-get-list-bundle";
 import Pagination from "@/components/pagination";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { useUnbundleBundle } from "../_api/use-unbundle-bundle";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useUnrepairRepair } from "../_api/use-unrepair-repair";
+import { useGetListRepair } from "../_api/use-get-list-repair";
 
 export const Client = () => {
   // data search, page
@@ -46,14 +46,14 @@ export const Client = () => {
     perPage: 1,
   });
 
-  const [UnbundleDialog, confirmUnbundle] = useConfirm(
-    "Unbundle Bundle",
+  const [UnrepairDialog, confirmUnrepair] = useConfirm(
+    "Unrepair Repair",
     "This action cannot be undone",
     "destructive",
   );
 
-  const { mutate: mutateUnbundle, isPending: isPendingUnbundle } =
-    useUnbundleBundle();
+  const { mutate: mutateUnrepair, isPending: isPendingUnrepair } =
+    useUnrepairRepair();
 
   // get data utama
   const {
@@ -65,7 +65,7 @@ export const Client = () => {
     error,
     isError,
     isSuccess,
-  } = useGetListBundle({ p: page, q: searchValue });
+  } = useGetListRepair({ p: page, q: searchValue });
 
   // memo data utama
   const dataList: any[] = useMemo(() => {
@@ -96,16 +96,16 @@ export const Client = () => {
     });
   }, [isError, error]);
 
-  const handleUnbundle = async (id: any) => {
-    const ok = await confirmUnbundle();
+  const handleUnrepair = async (id: any) => {
+    const ok = await confirmUnrepair();
 
     if (!ok) return;
 
-    mutateUnbundle({ id });
+    mutateUnrepair({ id });
   };
 
   // column data
-  const columnListBundle: ColumnDef<any>[] = [
+  const columnListRepair: ColumnDef<any>[] = [
     {
       header: () => <div className="text-center">No</div>,
       id: "id",
@@ -116,36 +116,36 @@ export const Client = () => {
       ),
     },
     {
-      accessorKey: "barcode",
+      accessorKey: "barcode_repair",
       header: "Barcode",
     },
     {
-      accessorKey: "name_bundle",
-      header: "Bundle Name",
+      accessorKey: "name_repair",
+      header: "Repair Name",
       cell: ({ row }) => (
-        <div className="break-all max-w-125">{row.original.name_bundle}</div>
+        <div className="break-all max-w-125">{row.original.name_repair}</div>
       ),
     },
     {
-      accessorKey: "total_product",
+      accessorKey: "total_product_repair",
       header: () => <div className="text-center">Qty</div>,
       cell: ({ row }) => (
         <div className="text-center tabular-nums">
-          {row.original.total_product.toLocaleString()}
+          {row.original.total_product_repair.toLocaleString()}
         </div>
       ),
     },
     {
-      accessorKey: "total_price",
+      accessorKey: "total_price_custom_repair",
       header: "Price",
-      cell: ({ row }) => formatRupiah(row.original.total_price),
+      cell: ({ row }) => formatRupiah(row.original.total_price_custom_repair),
     },
     {
-      accessorKey: "status",
+      accessorKey: "product_status",
       header: "Status",
       cell: ({ row }) => (
         <Badge className="rounded text-black font-normal capitalize bg-sky-400/80 hover:bg-sky-400/80">
-          {row.original.status}
+          {row.original.product_status}
         </Badge>
       ),
     },
@@ -161,24 +161,24 @@ export const Client = () => {
               asChild
             >
               <Link
-                href={`/inventory/moving-product/bundle/detail/${row.original.id}`}
+                href={`/inventory/moving-product/repair/detail/${row.original.id}`}
               >
                 <ReceiptText className="w-4 h-4" />
               </Link>
             </Button>
           </TooltipProviderPage>
-          <TooltipProviderPage value={<p>Unbundle</p>}>
+          <TooltipProviderPage value={<p>Unrepair</p>}>
             <Button
               className="items-center w-9 px-0 flex-none h-9 border-red-400 text-red-700 hover:text-red-700 hover:bg-red-50 disabled:opacity-100 disabled:hover:bg-red-50 disabled:pointer-events-auto disabled:cursor-not-allowed"
               variant={"outline"}
               type="button"
-              disabled={isPendingUnbundle}
+              disabled={isPendingUnrepair}
               onClick={(e) => {
                 e.preventDefault();
-                handleUnbundle(row.original.id);
+                handleUnrepair(row.original.id);
               }}
             >
-              {isPendingUnbundle ? (
+              {isPendingUnrepair ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <PackageOpen className="w-4 h-4" />
@@ -211,7 +211,7 @@ export const Client = () => {
 
   return (
     <div className="flex flex-col items-start bg-gray-100 w-full relative px-4 gap-4 py-4">
-      <UnbundleDialog />
+      <UnrepairDialog />
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -222,11 +222,11 @@ export const Client = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>Moving Product</BreadcrumbItem>
           <BreadcrumbSeparator />
-          <BreadcrumbItem>Bundle</BreadcrumbItem>
+          <BreadcrumbItem>Repair</BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex w-full bg-white rounded-md overflow-hidden shadow px-5 py-3 gap-10 flex-col">
-        <h2 className="text-xl font-bold">List Bundle</h2>
+        <h2 className="text-xl font-bold">List Repair</h2>
         <div className="flex flex-col w-full gap-4">
           <div className="flex gap-2 items-center w-full justify-between">
             <div className="flex items-center gap-3 w-full">
@@ -254,15 +254,15 @@ export const Client = () => {
                   className="items-center flex-none h-9 blue border-sky-400/80 text-white hover:text-white disabled:opacity-100 disabled:border-sky-400/80 disabled:pointer-events-auto disabled:cursor-not-allowed"
                   variant={"outline"}
                 >
-                  <Link href={"/inventory/moving-product/bundle/create"}>
+                  <Link href={"/inventory/moving-product/repair/create"}>
                     <PlusCircle className={"w-4 h-4 mr-1"} />
-                    Add Bundle
+                    Add Repair
                   </Link>
                 </Button>
               </div>
             </div>
           </div>
-          <DataTable columns={columnListBundle} data={dataList ?? []} />
+          <DataTable columns={columnListRepair} data={dataList ?? []} />
           <Pagination
             pagination={{ ...metaPage, current: page }}
             setPagination={setPage}

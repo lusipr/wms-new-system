@@ -186,10 +186,10 @@ const sidebarMenu = [
             title: "bundle",
             href: "/inventory/moving-product/bundle",
           },
-          // {
-          //   title: "repair",
-          //   href: "/inventory/moving-product/repair",
-          // },
+          {
+            title: "repair",
+            href: "/inventory/moving-product/repair",
+          },
         ],
       },
       // {

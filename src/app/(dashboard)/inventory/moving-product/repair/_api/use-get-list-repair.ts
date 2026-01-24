@@ -3,12 +3,12 @@ import axios from "axios";
 import { baseUrl } from "@/lib/baseUrl";
 import { getCookie } from "cookies-next/client";
 
-export const useGetListBundle = ({ p, q }: any) => {
+export const useGetListRepair = ({ p, q }: any) => {
   const accessToken = getCookie("accessToken");
   const query = useQuery({
-    queryKey: ["list-bundle", { p, q }],
+    queryKey: ["list-repair", { p, q }],
     queryFn: async () => {
-      const res = await axios.get(`${baseUrl}/bundles?page=${p}&q=${q}`, {
+      const res = await axios.get(`${baseUrl}/repairs?page=${p}&q=${q}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -25,7 +25,6 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
 import { TooltipProviderPage } from "@/providers/tooltip-provider-page";
-import { useGetCreateBundle } from "../_api/use-get-create-bundle";
 import Forbidden from "@/components/403";
 import { AxiosError } from "axios";
 import Loading from "@/app/(dashboard)/loading";
@@ -54,6 +53,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Separator } from "@/components/ui/separator";
+import { useGetCreateRepair } from "../_api/use-get-create-repair";
 
 const DialogProduct = dynamic(() => import("./dialog-product"), {
   ssr: false,
@@ -99,7 +99,7 @@ export const Client = () => {
   // confirm strat ----------------------------------------------------------------
 
   const [SubmitDialog, confirmSubmit] = useConfirm(
-    "Create Bundle",
+    "Create Repair",
     "This action cannot be undone",
     "liquid",
   );
@@ -127,7 +127,7 @@ export const Client = () => {
   // query strat ----------------------------------------------------------------
 
   const { data, refetch, isRefetching, error, isError, isSuccess } =
-    useGetCreateBundle({ p: page });
+    useGetCreateRepair({ p: page });
 
   const {
     data: dataProduct,
@@ -223,15 +223,8 @@ export const Client = () => {
     if (!ok) return;
 
     const body = {
-      bundle_type: "bundle",
-      // category: input.category,
-      category_id: input.categoryId,
+      bundle_type: "repair",
       name_bundle: input.name,
-      // name_color: input.color,
-      tag_color_id: null,
-      // total_price_bundle: input.total,
-      // total_price_custom_bundle: input.custom,
-      // total_product_bundle: dataList.length,
     };
 
     mutateSubmit({ body });
@@ -283,7 +276,7 @@ export const Client = () => {
     });
   }, [isErrorProduct, errorProduct]);
 
-  const columnBundle: ColumnDef<any>[] = [
+  const columnRepair: ColumnDef<any>[] = [
     {
       header: () => <div className="text-center">No</div>,
       id: "id",
@@ -441,8 +434,8 @@ export const Client = () => {
             <BreadcrumbItem>Moving Product</BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/inventory/moving-product/bundle">
-                Bundle
+              <BreadcrumbLink href="/inventory/moving-product/repair">
+                Repair
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -456,16 +449,16 @@ export const Client = () => {
             <div className="size-8 rounded-full bg-sky-100 flex items-center justify-center">
               <PencilRuler className="size-4 text-sky-600" />
             </div>
-            <h2 className="text-lg font-semibold">Create Bundle</h2>
+            <h2 className="text-lg font-semibold">Create Repair</h2>
           </div>
 
           {/* Form */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Bundle Name */}
+            {/* Repair Name */}
             <div className="space-y-1">
-              <Label>Bundle Name</Label>
+              <Label>Repair Name</Label>
               <Input
-                placeholder="Bundle Name..."
+                placeholder="Repair Name..."
                 value={input.name}
                 onChange={(e) =>
                   setInput((prev) => ({
@@ -473,7 +466,6 @@ export const Client = () => {
                     name: e.target.value,
                   }))
                 }
-              disabled={dataList?.length === 0}
               />
             </div>
 
@@ -587,7 +579,7 @@ export const Client = () => {
           <Button
             className="w-full bg-sky-500 hover:bg-sky-600"
             onClick={handleSubmit}
-            disabled={!input.name || dataList === null}
+            disabled={!input.name || dataList.length === 0}
           >
             <Send className="size-4 mr-2" />
             Create
@@ -626,7 +618,7 @@ export const Client = () => {
           </div>
           <DataTable
             isLoading={isRefetching}
-            columns={columnBundle}
+            columns={columnRepair}
             data={dataList ?? []}
           />
           <Pagination
