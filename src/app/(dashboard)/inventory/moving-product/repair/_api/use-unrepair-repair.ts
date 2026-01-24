@@ -11,35 +11,29 @@ type RequestType = {
 
 type Error = AxiosError;
 
-export const useRemoveProduct = () => {
+export const useUnrepairRepair = () => {
   const accessToken = getCookie("accessToken");
   const queryClient = useQueryClient();
 
   const mutation = useMutation<AxiosResponse, Error, RequestType>({
     mutationFn: async ({ id }) => {
-      const res = await axios.delete(
-        `${baseUrl}/bundle/filter-product/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const res = await axios.delete(`${baseUrl}/repair/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       return res;
     },
     onSuccess: () => {
-      toast.success("Product successfully removed");
-      queryClient.invalidateQueries({ queryKey: ["data-create-bundle"] });
-      queryClient.invalidateQueries({
-        queryKey: ["list-product-create-bundle"],
-      });
+      toast.success("Repair successfully unrepaird");
+      queryClient.invalidateQueries({ queryKey: ["list-repair"] });
     },
     onError: (err) => {
       if (err.status === 403) {
         toast.error(`Error 403: Restricted Access`);
       } else {
-        toast.error(`ERROR ${err?.status}: Product failed to remove`);
-        console.log("ERROR_REMOVE_PRODUCT:", err);
+        toast.error(`ERROR ${err?.status}: Repair failed to unrepair`);
+        console.log("ERROR_UNBUNDLE_BUNDLE:", err);
       }
     },
   });
