@@ -98,6 +98,7 @@ export const Client = () => {
     last: 1, //page terakhir
     from: 1, //data dimulai dari (untuk memulai penomoran tabel)
     total: 1, //total data
+    to: 1, //data sampai
     perPage: 1,
   });
 

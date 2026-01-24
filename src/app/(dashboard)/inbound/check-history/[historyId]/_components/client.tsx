@@ -132,6 +132,7 @@ export const Client = () => {
     last: 1, //page terakhir
     from: 1, //data dimulai dari (untuk memulai penomoran tabel)
     total: 1, //total data
+    to: 1, //data sampai
     perPage: 1,
   });
 
@@ -330,7 +331,7 @@ export const Client = () => {
       accessorKey: "new_name_product",
       header: "Product Name",
       cell: ({ row }) => (
-        <div className="break-all max-w-[500px]">
+        <div className="break-all max-w-125">
           {row.original.new_name_product ?? row.original.old_name_product}
         </div>
       ),
@@ -769,7 +770,7 @@ export const Client = () => {
                       </Pie>
                       <ChartLegend
                         content={<ChartLegendContent nameKey="dataType" />}
-                        className="-translate-y-2 w-3/4 mx-auto flex-wrap gap-y-1 gap-x-4 [&>*]:basis-1/4 [&>*]:justify-center "
+                        className="-translate-y-2 w-3/4 mx-auto flex-wrap gap-y-1 gap-x-4 *:basis-1/4 *:justify-center "
                       />
                     </PieChart>
                   </ChartContainer>

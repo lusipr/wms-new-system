@@ -71,6 +71,7 @@ export const Client = () => {
     last: 1, //page terakhir
     from: 1, //data dimulai dari (untuk memulai penomoran tabel)
     total: 1, //total data
+    to: 1, //data sampai
     perPage: 1,
   });
 
@@ -146,7 +147,7 @@ export const Client = () => {
       accessorKey: "old_price_product",
       header: "Old Price",
       cell: ({ row }) => (
-        <div className="break-all max-w-[500px]">
+        <div className="break-all max-w-125">
           {formatRupiah(row.original.old_price_product)}
         </div>
       ),
@@ -155,7 +156,7 @@ export const Client = () => {
       accessorKey: "new_price_product",
       header: "New Price",
       cell: ({ row }) => (
-        <div className="break-all max-w-[500px]">
+        <div className="break-all max-w-125">
           {formatRupiah(row.original.new_price_product)}
         </div>
       ),
@@ -164,7 +165,7 @@ export const Client = () => {
       accessorKey: "display_price",
       header: "Display Price",
       cell: ({ row }) => (
-        <div className="break-all max-w-[500px]">
+        <div className="break-all max-w-125">
           {formatRupiah(row.original.display_price)}
         </div>
       ),
@@ -310,7 +311,7 @@ export const Client = () => {
                 {/* Range Date */}
                 {dataInbound?.date?.date_from?.date && (
                   <>
-                    <p className="w-[1px] h-full bg-black" />
+                    <p className="w-px h-full bg-black" />
                     <p>
                       {`${dataInbound?.date?.date_from?.date ?? "-"} ${
                         dataInbound?.date?.date_from?.month ?? ""
@@ -324,7 +325,7 @@ export const Client = () => {
                     </button>
                   </>
                 )}
-                <p className="w-[1px] h-full bg-black" />
+                <p className="w-px h-full bg-black" />
                 <Dialog>
                   <DialogTrigger asChild>
                     <button onClick={() => {}}>
