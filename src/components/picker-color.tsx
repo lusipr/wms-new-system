@@ -174,7 +174,7 @@ const PickerColor = ({
       `}</style>
       <div
         style={{ background: hexColor }}
-        className="w-full aspect-[3/1] rounded shadow border border-gray-500"
+        className="w-full aspect-3/1 rounded shadow border border-gray-500"
       />
       <input
         type="range"

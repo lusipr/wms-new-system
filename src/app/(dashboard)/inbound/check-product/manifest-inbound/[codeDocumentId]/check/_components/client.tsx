@@ -79,12 +79,12 @@ export const Client = () => {
   const [SubmitDoubleDialog, confirmSubmit] = useConfirm(
     "Barcode Duplication Confirmation",
     "Confirm to submit the same barcode again, This action cannot be undone",
-    "liquid"
+    "liquid",
   );
   const [DoneAllDialog, confirmDoneAll] = useConfirm(
     "Done check all documents",
     "",
-    "liquid"
+    "liquid",
   );
 
   const [dataSearch, setDataSearch] = useQueryState("q", { defaultValue: "" });
@@ -117,7 +117,6 @@ export const Client = () => {
   const document = useMemo(() => {
     return data?.data.data;
   }, [data]);
-
 
   const barcodeData = useMemo(() => {
     return (
@@ -190,6 +189,18 @@ export const Client = () => {
     });
   };
 
+  const openBarcodeDialogFromResponse = (product: any) => {
+    setMetaBarcode({
+      barcode: product.new_data.barcode,
+      newPrice: String(product.new_data.price),
+      oldPrice: String(product.old_data.old_price_product),
+      category: String(product.new_data.category_id ?? ""),
+      discount: String(product.new_data.discount ?? "0"),
+    });
+
+    setBarcodeOpen(true);
+  };
+
   const handleSubmit = (e: FormEvent, type: string) => {
     e.preventDefault();
     if (!idProduct) {
@@ -197,7 +208,7 @@ export const Client = () => {
       return;
     }
     const selectedCategory = categories.find(
-      (item) => item.name_category === metaData.name
+      (item) => item.name_category === metaData.name,
     );
     const body = {
       code_document: codeDocument,
@@ -215,7 +226,7 @@ export const Client = () => {
       old_price_product: barcodeData?.old_price_product,
       new_date_in_product: format(
         new Date(barcodeData?.created_at),
-        "yyyy-MM-dd"
+        "yyyy-MM-dd",
       ),
       new_status_product: "display",
       quality: type,
@@ -226,10 +237,10 @@ export const Client = () => {
         type === "abnormal"
           ? metaData.abnormal
           : type === "damaged"
-          ? metaData.damaged
-          : type === "non"
-          ? metaData.non
-          : "",
+            ? metaData.damaged
+            : type === "non"
+              ? metaData.non
+              : "",
     };
 
     mutate(
@@ -238,39 +249,35 @@ export const Client = () => {
         body,
       },
       {
-        onSuccess: (data) => {
-          if (data.data.data.needConfirmation) {
-            toast.success(data.data.data.message);
-            setDataSearch("");
-            setMetaData({
-              abnormal: "",
-              damaged: "",
-              non: "",
-              discount: 0,
-              name: "",
-              qty: 0,
-            });
-            if (searchRef.current) {
-              searchRef.current.focus();
-            }
-            setBarcodeOpen(true);
-            setMetaBarcode({
-              barcode: data.data.data.resource.new_barcode_product,
-              newPrice: data.data.data.resource.new_price_product,
-              oldPrice: data.data.data.resource.old_price_product,
-              category: data.data.data.resource.new_category_product,
-              discount: data.data.data.resource.discount_category,
-            });
-          } else if (!data.data.data.needConfirmation) {
-            if (data.data.data.message === "The new barcode already exists") {
-              toast.error(data.data.data.message);
-            } else {
-              toast.error(data.data.data.message);
-              handleSubmitDouble(body);
-            }
+        onSuccess: (res) => {
+          const { status, message, product } = res.data;
+
+          if (!status) {
+            toast.error(message);
+            return;
           }
+
+          toast.success(message);
+
+          // reset form
+          setDataSearch("");
+          setMetaData({
+            abnormal: "",
+            damaged: "",
+            non: "",
+            discount: 0,
+            name: "",
+            qty: 0,
+          });
+
+          if (searchRef.current) {
+            searchRef.current.focus();
+          }
+
+          // ✅ INI KUNCINYA
+          openBarcodeDialogFromResponse(product);
         },
-      }
+      },
     );
   };
 
@@ -283,14 +290,14 @@ export const Client = () => {
         (isSuccessBarcode && `Error: ${dataBarcode?.data.message}`) ||
           `Error ${(errorBarcode as AxiosError).status}: ${
             dataBarcode?.data.data.message
-          }`
+          }`,
       );
     } else if (isSuccessBarcode && dataBarcode?.data.status) {
       toast.success("Barcode successfully found.");
       setMetaData((prev) => ({
         ...prev,
         qty: Math.round(
-          dataBarcode?.data.resource.product.old_quantity_product
+          dataBarcode?.data.resource.product.old_quantity_product,
         ),
       }));
     }
@@ -448,8 +455,8 @@ export const Client = () => {
             {loadingBarcode
               ? "Getting Data..."
               : isPendingSubmit
-              ? "Submiting..."
-              : "Submiting Double..."}
+                ? "Submiting..."
+                : "Submiting Double..."}
           </p>
         </div>
       ) : barcodeData?.id === "0" ? (
@@ -489,7 +496,7 @@ export const Client = () => {
                       <Label>Price</Label>
                       <Input
                         value={formatRupiah(
-                          parseFloat(barcodeData?.old_price_product)
+                          parseFloat(barcodeData?.old_price_product),
                         )}
                         disabled
                         className="w-full border-sky-400/80 focus-visible:ring-sky-400 disabled:opacity-100 disabled:cursor-default"
@@ -499,7 +506,7 @@ export const Client = () => {
                       <Label>Qty</Label>
                       <Input
                         value={parseFloat(
-                          barcodeData?.old_quantity_product
+                          barcodeData?.old_quantity_product,
                         ).toLocaleString()}
                         disabled
                         className="w-full border-sky-400/80 focus-visible:ring-sky-400 disabled:opacity-100 disabled:cursor-default"
@@ -530,7 +537,7 @@ export const Client = () => {
                             parseFloat(barcodeData?.old_price_product) -
                               (parseFloat(barcodeData?.old_price_product) /
                                 100) *
-                                metaData.discount
+                                metaData.discount,
                           )}
                           disabled
                           className="w-full border-sky-400/80 focus-visible:ring-sky-400 disabled:opacity-100 disabled:cursor-default"
@@ -574,7 +581,7 @@ export const Client = () => {
                         <Label>Price</Label>
                         <Input
                           value={formatRupiah(
-                            parseFloat(tagColor?.fixed_price_color)
+                            parseFloat(tagColor?.fixed_price_color),
                           )}
                           disabled
                           className="w-full border-sky-400/80 focus-visible:ring-sky-400 disabled:opacity-100 disabled:cursor-default"
@@ -628,13 +635,13 @@ export const Client = () => {
                       <RadioGroup
                         onValueChange={(e) => {
                           const selectedCategory = categories.find(
-                            (item) => item.name_category === e
+                            (item) => item.name_category === e,
                           );
                           setMetaData((prev) => ({
                             ...prev,
                             name: selectedCategory?.name_category ?? "",
                             discount: parseFloat(
-                              selectedCategory?.discount_category ?? "0"
+                              selectedCategory?.discount_category ?? "0",
                             ),
                           }));
                         }}
@@ -647,7 +654,7 @@ export const Client = () => {
                               "flex items-center gap-4 w-full border px-4 py-2.5 rounded-md",
                               metaData.name === item.name_category
                                 ? "border-gray-500 bg-sky-100"
-                                : "border-gray-300"
+                                : "border-gray-300",
                             )}
                           >
                             <RadioGroupItem
@@ -664,7 +671,7 @@ export const Client = () => {
                                   "font-bold border-b pb-1.5",
                                   metaData.name === item.name_category
                                     ? "border-gray-500"
-                                    : "border-gray-300"
+                                    : "border-gray-300",
                                 )}
                               >
                                 {item.name_category}
@@ -675,7 +682,7 @@ export const Client = () => {
                                 <span>
                                   Max.{" "}
                                   {formatRupiah(
-                                    parseFloat(item.max_price_category)
+                                    parseFloat(item.max_price_category),
                                   )}
                                 </span>
                               </p>

@@ -40,16 +40,19 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md p-2 border border-sky-400/80">
+    <div className="rounded-md py-2">
       <div
         className={cn(
-          "rounded relative",
-          isSticky ? `${maxHeight} overflow-y-scroll` : "overflow-hidden"
+          "rounded-t-xl relative",
+          isSticky ? `${maxHeight} overflow-y-scroll` : "overflow-hidden",
         )}
       >
         <Table>
           <TableHeader
-            className={cn(" color-header border-0", isSticky ? "sticky top-0" : "")}
+            className={cn(
+              " color-header border-0",
+              isSticky ? "sticky top-0" : "",
+            )}
           >
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
@@ -66,7 +69,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -98,7 +101,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeftToLine, MoveLeft, MoveLeftIcon, X } from "lucide-react";
+import { ArrowLeftToLine } from "lucide-react";
 import { MenuSidebar } from "./menu";
 import { usePathname } from "next/navigation";
 

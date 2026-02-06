@@ -10,7 +10,6 @@ import React, { ReactNode } from "react";
 export const TooltipProviderPage = ({
   children,
   value,
-  className,
   sideOffset,
   align,
   side,

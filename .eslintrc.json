@@ -1,6 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript"],
   "rules": {
+    "no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "react-hooks/exhaustive-deps": "off",
     "@typescript-eslint/no-empty-object-type": "off"
